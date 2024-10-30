@@ -1,26 +1,38 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import PeopleDetails from './_components/PeopleDetails';
+import PlanetDetails from './_components/PlanetDetails';
+import StarshipDetails from './_components/StarshipDetails';
+import { RootState } from './store';
 
-function App() {
+const App: React.FC = () => {
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/home"
+        element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/people/:id"
+        element={isAuthenticated ? <PeopleDetails /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/planets/:id"
+        element={isAuthenticated ? <PlanetDetails /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/starships/:id"
+        element={isAuthenticated ? <StarshipDetails /> : <Navigate to="/login" />}
+      />
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   );
-}
+};
 
 export default App;
