@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../features/auth/authSlice';
-import { RootState } from '../store';
+import { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 
@@ -18,7 +18,7 @@ const Login: React.FC = () => {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const onSubmit = (data: LoginFormInputs) => {
-    if (data.username === '1' && data.password === '1') {
+    if (data.username === 'admin' && data.password === 'password') {
       dispatch(login(data.username));
       navigate('/home');
     } else {

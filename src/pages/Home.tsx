@@ -1,45 +1,26 @@
-import React, { useState } from 'react';
-import EntityTable from '../_components/Table';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Home: React.FC = () => {
-  const [endpoint, setEndpoint] = useState<string>('people');
-
-  const handleButtonClick = (newEndpoint: string) => {
-    setEndpoint(newEndpoint);
-  };
-
   return (
     <div className="container mt-5">
       <h2 className="mb-4">Home Page</h2>
       
       <div className="mb-4">
-        <button
-          className="btn btn-primary me-2"
-          onClick={() => handleButtonClick('people')}
-          disabled={endpoint === 'people'}
-        >
+        <Link to="/people" className="btn btn-primary me-2">
           Персонажи
-        </button>
+        </Link>
 
-        <button
-          className="btn btn-primary me-2"
-          onClick={() => handleButtonClick('planets')}
-          disabled={endpoint === 'planets'} 
-        >
+        <Link to="/planets" className="btn btn-primary me-2">
           Планеты
-        </button>
+        </Link>
 
-        <button
-          className="btn btn-primary"
-          onClick={() => handleButtonClick('starships')}
-          disabled={endpoint === 'starships'} 
-        >
+        <Link to="/starships" className="btn btn-primary">
           Космические корабли
-        </button>
+        </Link>
       </div>
 
-      <EntityTable endpoint={endpoint} />
     </div>
   );
 };

@@ -1,36 +1,40 @@
-import React, { useEffect, useState } from 'react'; 
-import { useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStarships } from '../features/starshipSlice';
+import { RootState, AppDispatch } from '../store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const StarshipDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [starship, setStarship] = useState<any>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const starship = useSelector((state: RootState) =>
+    id ? state.starships.entities.find((starship) => starship.id.toString() === id) : undefined
+  );
 
   useEffect(() => {
-    const fetchStarshipDetails = async () => {
-      try {
-        const response = await fetch(`https://swapi.dev/api/starships/${id}/`); 
-        const data = await response.json();
-        setStarship(data);
-      } catch (error) {
-        console.error('Error fetching starship details:', error);
-      }
-    };
+    if (!starship) {
+      dispatch(fetchStarships());
+    }
+  }, [dispatch, starship]);
 
-    fetchStarshipDetails();
-  }, [id]);
-
-  if (!starship) return <p className="text-center">Loading...</p>;
+  if (!id) return <p className="text-center">Идентификатор звездолета не указан.</p>;
+  if (!starship) return <p className="text-center">Звездолет не найден.</p>;
 
   return (
     <div className="container mt-4">
-      <div className="p-4 border rounded bg-light">
-        <h2 className="mb-4">{starship.name}</h2>
-        <p><strong>Model:</strong> {starship.model}</p>
-        <p><strong>Length:</strong> {starship.length}</p>
-        <p><strong>Passengers:</strong> {starship.passengers}</p>
-        <p><strong>Starship Class:</strong> {starship.starship_class}</p>
-      </div>
+      <h2 className="mb-4">{starship.name}</h2>
+      <p><strong>Модель:</strong> {starship.model}</p>
+      <p><strong>Производитель:</strong> {starship.manufacturer}</p>
+      <p><strong>Длина:</strong> {starship.length}</p>
+      <button className="btn btn-primary" onClick={() => navigate(`/starships/edit/${id}`)}>
+        Редактировать
+      </button>
+      <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+        Назад
+      </button>
     </div>
   );
 };

@@ -4,10 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface Entity {
   name: string;
-  url: string;  // Добавим URL для получения ID
+  url: string;  
 }
 
-interface EntityTableProps {
+export interface EntityTableProps {
   endpoint: string;  
 }
 
@@ -48,12 +48,11 @@ const EntityTable: React.FC<EntityTableProps> = ({ endpoint }) => {
         </thead>
         <tbody>
           {entities.map((entity, index) => {
-            // Извлекаем ID из URL
-            const id = entity.url.split('/')[5]; // URL имеет формат: https://swapi.dev/api/people/1/
+            const id = entity.url.split('/')[5];
             return (
               <tr key={index}>
                 <td>
-                  <Link to={`/${endpoint}/${id}`} className="text-decoration-none">
+                  <Link to={`/${endpoint}/${id}/`} className="text-decoration-none">
                     {entity.name}
                   </Link> 
                 </td>

@@ -1,36 +1,44 @@
-import React, { useEffect, useState } from 'react'; 
-import { useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPeople } from '../features/peopleSlice';
+import { RootState, AppDispatch } from '../store/store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const PeopleDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [person, setPerson] = useState<any>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  
+  const entity = useSelector((state: RootState) =>
+    state.people.entities.find((entity) => entity.id.toString() === id)
+  );
 
   useEffect(() => {
-    const fetchPersonDetails = async () => {
-      try {
-        const response = await fetch(`https://swapi.dev/api/people/${id}/`); 
-        const data = await response.json();
-        setPerson(data);
-      } catch (error) {
-        console.error('Error fetching person details:', error);
-      }
-    };
+    dispatch(fetchPeople());
+  }, [dispatch]);
 
-    fetchPersonDetails();
-  }, [id]);
+  useEffect(() => {
+    console.log('Полученные данные для отображения:', entity); 
+  }, [entity]);
 
-  if (!person) return <p className="text-center">Loading...</p>;
+  if (!entity) {
+    return <p className="text-center">Загружаем данные...</p>;
+  }
 
   return (
     <div className="container mt-4">
-      <div className="p-4 border rounded bg-light">
-        <h2 className="mb-4">{person.name}</h2>
-        <p><strong>Height:</strong> {person.height}</p>
-        <p><strong>Mass:</strong> {person.mass}</p>
-        <p><strong>Gender:</strong> {person.gender}</p>
-        <p><strong>Birth Year:</strong> {person.birth_year}</p>
-      </div>
+      <h2 className="mb-4">{entity.name}</h2>
+      <p><strong>Height:</strong> {entity.height}</p>
+      <p><strong>Mass:</strong> {entity.mass}</p>
+      <p><strong>Gender:</strong> {entity.gender}</p>
+      <p><strong>Birth Year:</strong> {entity.birth_year}</p>
+      <button className="btn btn-primary" onClick={() => navigate(`/people/edit/${id}`)}>
+        Редактировать
+      </button>
+      <button className="btn btn-secondary" onClick={() => navigate(-1)}>
+        Назад
+      </button>
     </div>
   );
 };
