@@ -13,6 +13,7 @@
 
 ## Установка и запуск
 1. Клонируйте репозиторий:
+
    ```bash git clone https://github.com/MMadiyar417/dashboard```
 2. Перейти в директорию проекта:  cd dashboard
 3. Установить зависимости:
